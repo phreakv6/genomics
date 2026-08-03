@@ -1,0 +1,11 @@
+data/
+__pycache__/
+*.pyc
+.DS_Store
+*.tbi
+*.bam
+*.bai
+*.fa
+*.fa.gz
+*.fastq
+*.sam
