@@ -68,6 +68,22 @@ look for long stretches without a stop codon — an **open reading frame** (ORF)
 Translation starts at `AUG` (which codes methionine, and doubles as the start signal) and runs until
 it hits `UAA`, `UAG`, or `UGA` — the three stop codons.
 
+Two practical consequences that bite immediately:
+
+**Frames have different lengths.** Starting 1 or 2 bases in leaves a trailing 1–2 bases that can't
+form a codon. They get discarded — two bases are not a codon and nothing can be said about them. A
+93bp sequence yields 31, 30, and 30 residues in frames +1, +2, +3, not 31 three times.
+
+**The reverse frames are not positionally paired with the forward ones.** Frame −1 starts at offset
+0 of the *reverse complement*, which is the far end of the input. So index 5 in frame +1 and index 5
+in frame −1 sit at opposite ends of the molecule. Naming them ±1/2/3 makes them look like aligned
+columns; they are six independent readings. When you find something on the minus strand, its offset
+in the reverse-complemented string you searched must be mapped back with `L - end` to be a position
+on the original sequence. Skip that and the feature silently lands at the wrong end — the
+reading-frame version of the coordinate bugs in module 03. `find_orfs()` handles this and proves it
+by round-tripping: slice the original at the reported coordinates, reverse-complement, translate,
+and check you get the peptide back.
+
 ## Variation — the vocabulary you need for modules 3–5
 
 - **SNP / SNV** — single nucleotide polymorphism/variant. One base differs. `A` where the reference

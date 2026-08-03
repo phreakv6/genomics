@@ -106,24 +106,67 @@ def six_frame_translation(dna):
     return frames
 
 
+STOPS = {"UAA", "UAG", "UGA"}
+
+
 def find_orfs(dna, min_aa=20):
     """Open reading frames: AUG ... stop, in any of the six frames.
+
+    Coordinates are always reported against the ORIGINAL forward sequence,
+    0-based half-open [start, end) like a BED interval, with `end` including
+    the stop codon. This matters: a minus-strand ORF is found by searching the
+    reverse complement, so its offset in that searched string counts from the
+    far end of the input. Reporting that raw offset would make plus- and
+    minus-strand hits incomparable, and would place the feature at the wrong
+    end of the sequence. Mapping back is the `L - end` arithmetic below.
 
     Naive on purpose. Real gene finding has to deal with introns, which this
     cannot see -- that is exactly why annotation files exist (module 03).
     """
+    L = len(dna)
     orfs = []
-    for label, strand_seq in (("+", dna), ("-", reverse_complement(dna))):
+    for strand, strand_seq in (("+", dna), ("-", reverse_complement(dna))):
         rna = transcribe(strand_seq)
         for start in range(len(rna) - 2):
             if rna[start:start + 3] != "AUG":
                 continue
             peptide = translate(rna[start:], stop_at_stop=True)
-            # translate() stopped early only if a stop codon was actually hit
-            hit_stop = start + 3 * len(peptide) + 3 <= len(rna)
-            if hit_stop and len(peptide) >= min_aa:
-                orfs.append((label, start, peptide))
-    return orfs
+            # translate() stops before the stop codon, so the codon that
+            # follows the peptide must itself be a stop for this to be a
+            # complete ORF rather than one running off the end of the input.
+            stop_at = start + 3 * len(peptide)
+            if rna[stop_at:stop_at + 3] not in STOPS:
+                continue
+            if len(peptide) < min_aa:
+                continue
+
+            end = stop_at + 3                      # include the stop codon
+            if strand == "+":
+                fwd_start, fwd_end = start, end
+            else:
+                # index i of the reverse complement is index L-1-i of the
+                # forward sequence, so the interval flips end-for-end.
+                fwd_start, fwd_end = L - end, L - start
+
+            orfs.append({
+                "strand": strand,
+                "start": fwd_start,                # 0-based, on the input seq
+                "end": fwd_end,                    # half-open, includes stop
+                "peptide": peptide,
+            })
+    return sorted(orfs, key=lambda o: (o["start"], o["strand"]))
+
+
+def extract_orf(dna, orf):
+    """Pull an ORF's nucleotides back out of the original sequence.
+
+    Round-tripping through this is how you prove the coordinates are right --
+    translating the extracted slice must reproduce the reported peptide.
+    """
+    chunk = dna[orf["start"]:orf["end"]]
+    if orf["strand"] == "-":
+        chunk = reverse_complement(chunk)
+    return chunk
 
 
 # ---------------------------------------------------------------------------
@@ -137,6 +180,19 @@ HBB_CDS = (
     "ATGGTGCATCTGACTCCTGAGGAGAAGTCTGCCGTTACTGCCCTGTGGGGCAAGGTGAACGTGGAT"
     "GAAGTTGGTGGTGAGGCCCTGGGCAGG"
 )
+
+# A constructed sequence for demonstrating ORF finding on both strands.
+# Built as:  filler + [forward ORF] + filler + [revcomp of a second ORF] + filler
+# Real bacterial genomes genuinely look a bit like this -- genes packed on
+# both strands with short gaps. Eukaryotic DNA does not, because of introns.
+_ORF_FWD = "ATG" + "GCTTTAGGTCATAAGCCTTGGGAAGATTTC" + "TAA"   # 12 aa + stop
+_ORF_REV = "ATG" + "AAACGTGTTTGGCAAGACTTAATTCCGAGT" + "TGA"   # 12 aa + stop
+DEMO = ("CCTTACGAGT"
+        + _ORF_FWD
+        + "GGATCCTTAA"
+        + "".join({"A": "T", "T": "A", "C": "G", "G": "C"}[b]
+                 for b in reversed(_ORF_REV))          # planted on minus strand
+        + "TTAGGCCATA")
 
 
 def apply_snv(seq, zero_based_pos, ref, alt):
@@ -268,12 +324,50 @@ def main():
     print(rule)
     orfs = find_orfs(seq, min_aa=5)
     if orfs:
-        for strand, start, peptide in orfs:
-            print(f"  strand {strand}  start {start:>3}  {len(peptide):>3} aa  {peptide[:40]}")
+        for orf in orfs:
+            print(f"  {orf['strand']} {orf['start']:>3}-{orf['end']:<3} {orf['peptide']}")
     else:
-        print("  none found with a stop codon -- this fragment is cut mid-gene,")
-        print("  so the real ORF runs off the end. Realistic: genes rarely come")
-        print("  pre-trimmed, and introns make naive ORF finding fail on real DNA.")
+        print("  Nothing found in HBB_CDS: this fragment is cut mid-gene, so the")
+        print("  real ORF runs off the end without ever reaching a stop codon.")
+        print("  Realistic -- genes do not come pre-trimmed, and introns make")
+        print("  naive ORF finding fail outright on real genomic DNA.")
+
+    print()
+    print("  So here is a constructed sequence with one ORF on each strand:")
+    print()
+    orfs = find_orfs(DEMO, min_aa=5)
+    print(f"  sequence ({len(DEMO)} bp)  {DEMO[:56]}...")
+    print()
+    print(f"  {'strand':<8}{'start':>6}{'end':>6}{'len':>6}   peptide")
+    for orf in orfs:
+        nt = orf["end"] - orf["start"]
+        print(f"  {orf['strand']:<8}{orf['start']:>6}{orf['end']:>6}{nt:>5}nt   "
+              f"{orf['peptide']}*")
+
+    print()
+    print("  Coordinates are on the FORWARD sequence, 0-based half-open, with")
+    print("  the stop codon included -- so they can be compared to each other,")
+    print("  and dropped straight into a BED file.")
+    print()
+    print("  Proof they are right: slice the original sequence at those")
+    print("  coordinates, reverse-complement if the hit was on the minus")
+    print("  strand, and translate. It must reproduce the peptide.")
+    print()
+    for orf in orfs:
+        nts = extract_orf(DEMO, orf)
+        back = translate(transcribe(nts), stop_at_stop=True)
+        ok = "OK" if back == orf["peptide"] else "MISMATCH"
+        print(f"    strand {orf['strand']}  DEMO[{orf['start']}:{orf['end']}]"
+              f"{' -> revcomp' if orf['strand'] == '-' else '           '}"
+              f" -> {back}   [{ok}]")
+        assert back == orf["peptide"], "coordinate mapping is wrong"
+    print()
+    print("  Note the minus-strand ORF's start is NOT its offset in the")
+    print("  reverse-complemented string that was searched -- that offset")
+    print("  counts from the opposite end. Mapping back is 'L - end', and")
+    print("  getting it wrong silently places the feature at the wrong end")
+    print("  of the sequence, which is the reading-frame version of the")
+    print("  coordinate bugs in module 03.")
 
 
 if __name__ == "__main__":
