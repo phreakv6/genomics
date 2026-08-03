@@ -37,8 +37,42 @@ each of the 4³ = 64 codons to one of 20 amino acids or to "stop".
 acid, usually differing in the third position. This has a large consequence you'll meet constantly
 in variant analysis: a DNA change in the third position of a codon often changes nothing about the
 protein. Those are **synonymous** variants. Changes that do alter the amino acid are
-**non-synonymous** (or **missense**); ones that create a premature stop are **nonsense**. Most of
-variant interpretation begins with sorting mutations into these buckets.
+**non-synonymous** (or **missense**); ones that create a premature stop are **nonsense**; ones that
+destroy the initiator AUG are **start-lost**; ones that destroy a stop codon are **stop-lost**.
+Most of variant interpretation begins with sorting mutations into these buckets.
+
+### Codon boundaries come from the annotation, not from the base
+
+This is worth stopping on, because it undercuts the naive picture. Saying "this variant is in codon
+7" is a claim about where the coding sequence starts. Shift that start by one base and every codon
+boundary moves with it, so the *same* base lands in a different codon at a different position within
+it — and gets a different verdict. Run `central_dogma.py` section 5b: the sickle A>T reads as
+Glu→Val, Arg→Trp, or a lost stop codon, depending purely on the assumed frame.
+
+In the cell the frame isn't a free choice — the ribosome starts at one particular AUG and splicing
+joins the exons one particular way, so there is a single true frame per transcript. What varies is
+our *knowledge* of it, and that is genuinely plural:
+
+- **One gene has many transcripts.** Alternative splicing puts the same base in different codons in
+  different isoforms, so `VEP` and `SnpEff` report one consequence **per transcript**. A variant that
+  is missense in one and synonymous in another is routine, and both are true.
+- **So a bare `c.20A>T` is not interpretable.** Real HGVS carries the transcript and its version:
+  `NM_000518.5:c.20A>T`.
+- **MANE Select** exists for this reason — NCBI and EMBL-EBI agreeing on one canonical transcript per
+  gene so clinical labs stop talking past each other.
+- **Annotation versions drift**, so the same variant can change consequence between Ensembl releases.
+  A real source of clinical discordance.
+
+### Two numbering conventions, and the one everybody trips on
+
+**HGVS** — the **Human Genome Variation Society**, who maintain the standard nomenclature (`g.` for
+genomic, `c.` for coding DNA, `p.` for protein) — numbers protein residues from the initiator
+methionine, which is residue 1. Older literature uses **mature** numbering, counting after that
+methionine has been cleaved off the finished protein, so it runs one lower.
+
+Hence the sickle variant is `p.Glu7Val` in ClinVar and "E6V" in every textbook. Same variant, two
+conventions. `classify_snv()` reports both, and returns no mature number for the initiator codon
+itself, where the convention is undefined.
 
 ## Genes, and why real genomes are harder than the string version
 

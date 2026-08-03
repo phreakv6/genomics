@@ -207,30 +207,93 @@ def apply_snv(seq, zero_based_pos, ref, alt):
     return seq[:zero_based_pos] + alt + seq[zero_based_pos + 1:]
 
 
-def classify_snv(cds, pos, ref, alt):
-    """Sort a coding SNV into synonymous / missense / nonsense.
+def classify_snv(cds, pos, ref, alt, cds_offset=0):
+    """Sort a coding SNV into synonymous / missense / nonsense / etc.
 
-    This is the first and most basic step of variant interpretation.
+    `cds_offset` is where the coding sequence starts within `cds`. It defaults
+    to 0 because HBB_CDS is already trimmed to the start codon -- but the
+    parameter exists to make the dependency explicit. Every result below is
+    relative to that choice; see demo_frame_dependence() for what happens when
+    it is wrong.
+
+    Returns a dict, because a variant consequence is genuinely several facts
+    and squashing them into a string loses the ones that matter.
     """
     mutant = apply_snv(cds, pos, ref, alt)
-    wt_protein = translate(transcribe(cds), stop_at_stop=False)
-    mut_protein = translate(transcribe(mutant), stop_at_stop=False)
+    wt_protein = translate(transcribe(cds[cds_offset:]), stop_at_stop=False)
+    mut_protein = translate(transcribe(mutant[cds_offset:]), stop_at_stop=False)
 
-    codon_index = pos // 3
+    codon_index = (pos - cds_offset) // 3            # 0-based
     wt_aa, mut_aa = wt_protein[codon_index], mut_protein[codon_index]
 
     if wt_aa == mut_aa:
         kind = "synonymous"
+    elif codon_index == 0:
+        # Destroying the start codon means translation cannot initiate here at
+        # all. The protein is not "one residue different" -- it is absent, or
+        # starts at some downstream AUG in a different frame.
+        kind = "start-lost"
+    elif wt_aa == "*":
+        kind = "stop-lost"                           # translation runs on
     elif mut_aa == "*":
-        kind = "nonsense"
+        kind = "nonsense"                            # premature stop
     else:
         kind = "missense"
 
-    # Protein numbering conventionally drops the initiator methionine,
-    # which is why the sickle variant is called Glu6Val and not Glu7Val.
-    protein_pos = codon_index  # 0-based codon index == 1-based mature position
-    hgvs = f"p.{AA_NAMES[wt_aa]}{protein_pos}{AA_NAMES[mut_aa]}"
-    return kind, hgvs, wt_protein, mut_protein
+    # HGVS protein numbering counts from the initiator methionine, which is
+    # residue 1. So codon_index 6 (0-based) is p.7.
+    hgvs_pos = codon_index + 1
+    hgvs_p = f"p.{AA_NAMES[wt_aa]}{hgvs_pos}{AA_NAMES[mut_aa]}"
+
+    # Much older literature uses MATURE numbering, which counts after the
+    # initiator methionine has been cleaved off the finished protein -- so it
+    # is one lower, and undefined for the initiator itself. This is why the
+    # sickle variant is universally known as Glu6Val while ClinVar records it
+    # as p.Glu7Val. Same variant, two conventions, endless confusion.
+    mature_p = (f"p.{AA_NAMES[wt_aa]}{codon_index}{AA_NAMES[mut_aa]}"
+                if codon_index >= 1 else None)
+
+    return {
+        "kind": kind,
+        "hgvs_c": f"c.{pos - cds_offset + 1}{ref}>{alt}",   # 1-based on the CDS
+        "hgvs_p": hgvs_p,
+        "legacy_p": mature_p,
+        "wt_protein": wt_protein,
+        "mut_protein": mut_protein,
+    }
+
+
+def demo_frame_dependence(cds, pos, alt):
+    """The same base change, read in each of the three possible frames.
+
+    Answers the question 'is this really the same codon?' -- it is not. Codon
+    boundaries are a property of the ANNOTATION, not of the base.
+    """
+    rows = []
+    for offset in (0, 1, 2):
+        codon_index = (pos - offset) // 3
+        codon_start = offset + 3 * codon_index
+        wt_codon = cds[codon_start:codon_start + 3]
+        if len(wt_codon) < 3:
+            continue
+        i = pos - codon_start
+        mut_codon = wt_codon[:i] + alt + wt_codon[i + 1:]
+        wt_aa = CODON_TABLE[transcribe(wt_codon)]
+        mut_aa = CODON_TABLE[transcribe(mut_codon)]
+        if wt_aa == mut_aa:
+            kind = "synonymous"
+        elif wt_aa == "*":
+            kind = "stop-lost"
+        elif mut_aa == "*":
+            kind = "nonsense"
+        else:
+            kind = "missense"
+        rows.append({
+            "offset": offset, "codon_pos": i + 1,
+            "wt_codon": wt_codon, "mut_codon": mut_codon,
+            "wt_aa": wt_aa, "mut_aa": mut_aa, "kind": kind,
+        })
+    return rows
 
 
 # ---------------------------------------------------------------------------
@@ -298,25 +361,75 @@ def main():
     print(rule)
     print("5. A real mutation: sickle cell disease")
     print(rule)
-    # HBB codon 6 (mature numbering): GAG -> GTG, a single A->T at CDS pos 20
-    # (1-based). This one base is the entire molecular basis of sickle cell.
-    kind, hgvs, wt, mut = classify_snv(seq, 19, "A", "T")
-    print(f"  change     c.20A>T   (GAG -> GTG)")
-    print(f"  effect     {kind}   {hgvs}")
-    print(f"  wild type  {wt[:16]}")
-    print(f"  mutant     {mut[:16]}")
+    # A single A->T at CDS position 20 (1-based). This one base is the entire
+    # molecular basis of sickle cell disease.
+    r = classify_snv(seq, 19, "A", "T")
+    print(f"  change     {r['hgvs_c']}   (GAG -> GTG)")
+    print(f"  effect     {r['kind']}   {r['hgvs_p']}")
+    print(f"  wild type  {r['wt_protein'][:16]}")
+    print(f"  mutant     {r['mut_protein'][:16]}")
     print("                   ^ Glu (charged, water-loving) -> Val (greasy)")
     print("  That hydrophobic patch makes haemoglobin molecules stick to each")
     print("  other and polymerise, deforming the red cell into a sickle.")
     print("  One base out of 3 billion.")
+    print()
+    print(f"  Two names for this variant, both correct:")
+    print(f"    {r['hgvs_p']:<12} HGVS -- counts from the initiator Met, which")
+    print(f"                 is residue 1. This is what ClinVar records.")
+    print(f"    {r['legacy_p']:<12} mature numbering -- counts after that Met is")
+    print(f"                 cleaved off the finished protein. The historical")
+    print(f"                 literature name, and why everyone says 'E6V'.")
+    print("  HGVS = Human Genome Variation Society, who maintain the standard.")
 
     print()
     print("  For contrast, a third-position change in the same codon:")
-    kind2, hgvs2, _, _ = classify_snv(seq, 20, "G", "A")   # GAG -> GAA
-    print(f"  change     c.21G>A   (GAG -> GAA)   effect: {kind2}  {hgvs2}")
+    r2 = classify_snv(seq, 20, "G", "A")                   # GAG -> GAA
+    print(f"  change     {r2['hgvs_c']}   (GAG -> GAA)   effect: {r2['kind']}"
+          f"  {r2['hgvs_p']}")
     print("  Same codon, different position, zero consequence. That asymmetry")
     print("  is the degeneracy of the genetic code, and it is why variant")
     print("  annotation is the first filter in every clinical pipeline.")
+
+    print()
+    print(rule)
+    print("5b. 'The same codon' is a claim about the ANNOTATION")
+    print(rule)
+    print("  Everything above assumed the coding sequence starts at index 0.")
+    print("  Shift that by one or two bases and every codon boundary moves,")
+    print("  so the very same base lands in a different codon at a different")
+    print("  position within it. Same A>T, read three ways:")
+    print()
+    print(f"  {'CDS starts':<12}{'codon':>7}{'pos':>5}{'':4}{'mutant':<8}"
+          f"{'effect':<12}change")
+    for row in demo_frame_dependence(seq, 19, "T"):
+        print(f"  index {row['offset']:<6}{row['wt_codon']:>7}{row['codon_pos']:>5}"
+              f" -> {row['mut_codon']:<8}{row['kind']:<12}"
+              f"{AA_NAMES[row['wt_aa']]} -> {AA_NAMES[row['mut_aa']]}")
+    print()
+    print("  Not a milder or stronger version of the same finding -- three")
+    print("  different findings, one of which is not a missense at all but a")
+    print("  lost stop codon.")
+    print()
+    print("  In the cell the frame is NOT a free choice: the ribosome starts at")
+    print("  one particular AUG, and splicing joins the exons one particular")
+    print("  way. There is a single true frame per transcript. What varies is")
+    print("  our KNOWLEDGE of it -- the annotation. And that is genuinely")
+    print("  plural:")
+    print()
+    print("   - One gene has many transcripts. Alternative splicing puts the")
+    print("     same base in different codons in different isoforms, so VEP")
+    print("     and SnpEff report one consequence PER TRANSCRIPT. A variant")
+    print("     being missense in one and synonymous in another is routine,")
+    print("     and both are true.")
+    print("   - So a bare 'c.20A>T' is not interpretable. Real HGVS carries the")
+    print("     transcript and its version: NM_000518.5:c.20A>T. The output")
+    print("     above prints the short form only because HBB is simple.")
+    print("   - MANE Select exists for exactly this reason: NCBI and EMBL-EBI")
+    print("     agreeing on one canonical transcript per gene so that clinical")
+    print("     labs stop talking past each other.")
+    print("   - Annotation versions drift. The same variant can change")
+    print("     consequence between Ensembl releases. This is a real source of")
+    print("     clinical discordance, not a hypothetical one.")
 
     print()
     print(rule)
