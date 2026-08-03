@@ -1,10 +1,17 @@
 # bio
 
-Learning genomics by building, with Claude Code. Public data only.
+A generalist's path into genomics, built with Claude Code. Public data only, laptop only.
 
-Five modules, in order. Each has a `theory.md` (read it) and runnable code (we run it together
-and look at the output). The point is not to type the code — it's to understand what every line
-is doing and why the field does it that way.
+Five modules, in order. Each has a `theory.md` you read and code you run, and the point isn't to
+type the code — it's to understand what every line does and why the field works that way. The
+prose and the functions map onto each other deliberately.
+
+Written by a software engineer and investor learning this from scratch, so it assumes you can
+program and know statistics, and assumes nothing about biology. If you want to learn alongside,
+see **[SETUP.md](SETUP.md)** — it's ~55MB of downloads and about 10 minutes of setup.
+
+Corrections are the most valuable contribution: this is a repo written *while* learning, so
+open an issue if something here is wrong.
 
 | # | Module | What it teaches | Runs on |
 |---|--------|-----------------|---------|
@@ -14,27 +21,35 @@ is doing and why the field does it that way.
 | 04 | `pipeline/` | FASTQ → BAM → VCF on GIAB, scored vs a truth set | conda env `bio` |
 | 05 | `popgen/` | scikit-allel PCA on 1000 Genomes | conda env `bio` |
 
-## Environment
+## Quick start
 
-```
-conda activate bio
-```
-
-Built with `CONDA_SUBDIR=osx-64` — see `03-formats/theory.md` for why that matters on Apple Silicon.
-
-## How to run each module
+Modules 01 and 02 need nothing but Python — no setup, no downloads. Start there.
 
 ```bash
 python 01-central-dogma/central_dogma.py
 python 02-rosalind/rosalind.py && python 02-rosalind/alignment.py
+```
+
+For 03–05, create the environment once (**[SETUP.md](SETUP.md)** has the details,
+including the Apple Silicon gotcha):
+
+```bash
+conda env create -f environment.yml        # prefix with CONDA_SUBDIR=osx-64 on Apple Silicon
+conda activate bio
+
 python 03-formats/make_data.py && bash 03-formats/run.sh
 python 03-formats/dissect.py && python 03-formats/coordinates.py
-bash 04-pipeline/run.sh && python 04-pipeline/benchmark.py
+
+bash 04-pipeline/fetch_data.sh && bash 04-pipeline/run.sh
+python 04-pipeline/benchmark.py
+
 bash 05-popgen/fetch_data.sh && python 05-popgen/pca.py
 ```
 
-Modules 03–05 need `conda activate bio` first. `data/` directories are
-downloaded artefacts and should not be committed (`.gitignore` covers them).
+Each `run.sh` checks its tools first and tells you exactly what to do if the
+environment isn't active. Downloaded data lands in per-module `data/`
+directories, which are gitignored and safe to delete — the fetch scripts are
+re-runnable and skip work already done.
 
 ## Results, first pass
 

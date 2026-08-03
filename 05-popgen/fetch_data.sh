@@ -10,8 +10,8 @@
 # Run: bash 05-popgen/fetch_data.sh
 
 set -euo pipefail
-BIN=/opt/homebrew/Caskroom/miniconda/base/envs/bio/bin
-export PATH="$BIN:$PATH"
+source "$(dirname "$0")/../check_env.sh"
+require_tools bcftools curl
 cd "$(dirname "$0")"
 mkdir -p data && cd data
 
