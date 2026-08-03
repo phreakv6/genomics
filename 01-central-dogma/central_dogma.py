@@ -182,16 +182,35 @@ HBB_CDS = (
 )
 
 # A constructed sequence for demonstrating ORF finding on both strands.
-# Built as:  filler + [forward ORF] + filler + [revcomp of a second ORF] + filler
-# Real bacterial genomes genuinely look a bit like this -- genes packed on
-# both strands with short gaps. Eukaryotic DNA does not, because of introns.
-_ORF_FWD = "ATG" + "GCTTTAGGTCATAAGCCTTGGGAAGATTTC" + "TAA"   # 12 aa + stop
-_ORF_REV = "ATG" + "AAACGTGTTTGGCAAGACTTAATTCCGAGT" + "TGA"   # 12 aa + stop
+#
+# Two DIFFERENT genes at two DIFFERENT positions, one on each strand:
+#
+#   0-10   10 ---------- 46   46-56   56 ---------- 92   92-102
+#   filler  [ _ORF_FWD ]      filler  [ _ORF_REV ]       filler
+#            + strand                  - strand
+#
+# They are not reverse complements of each other -- they are separate genes
+# that happen to sit near each other. Real bacterial genomes look like this:
+# genes densely packed on both strands with short gaps between. (A pair that
+# WERE reverse complements would be an overlapping/ambisense gene, where one
+# stretch of DNA encodes two proteins read in opposite directions. Real, but
+# largely confined to viruses under extreme genome-size pressure, because
+# every base then has to satisfy two coding constraints at once.)
+#
+# Eukaryotic DNA does not look like this either, because introns interrupt
+# the coding sequence -- which is why naive ORF finding fails on human DNA.
+#
+# Each is 12 codons: ATG + 10 more + a stop, giving an 11-residue peptide.
+_ORF_FWD = "ATG" + "GCTTTAGGTCATAAGCCTTGGGAAGATTTC" + "TAA"
+_ORF_REV = "ATG" + "AAACGTGTTTGGCAAGACTTAATTCCGAGT" + "TGA"
+
+# _ORF_REV is written as the gene READS -- 5'->3' along the minus strand. To
+# plant it we need what the PLUS strand must say at that location, which is
+# its reverse complement. This is the same conversion find_orfs() has to undo.
 DEMO = ("CCTTACGAGT"
         + _ORF_FWD
         + "GGATCCTTAA"
-        + "".join({"A": "T", "T": "A", "C": "G", "G": "C"}[b]
-                 for b in reversed(_ORF_REV))          # planted on minus strand
+        + reverse_complement(_ORF_REV)
         + "TTAGGCCATA")
 
 
