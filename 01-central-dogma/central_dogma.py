@@ -222,8 +222,21 @@ def main():
     print("4. Reading frames -- where you start changes everything")
     print(rule)
     for label, peptide in six_frame_translation(seq).items():
-        print(f"  frame {label}  {peptide[:30]}")
+        offset = int(label[1]) - 1
+        usable = len(seq) - offset
+        leftover = usable % 3
+        note = f"{len(peptide):>2} aa" + (f"  (+{leftover} base{'s' * (leftover > 1)} "
+                                          "left over, discarded)" if leftover else "")
+        print(f"  frame {label}  {peptide}  {note}")
+    print()
     print("  only frame +1 is the real one; the rest are riddled with stops (*)")
+    print()
+    print("  Note the lengths differ. Frames +2/+3 start 1 or 2 bases in, so the")
+    print("  sequence no longer divides evenly by 3 and the trailing 1-2 bases")
+    print("  cannot form a codon. translate() drops them, via the")
+    print("  'len(rna) - len(rna) % 3' bound on its loop. Two bases are not a")
+    print("  codon and nothing can be said about them -- so with a 93bp input")
+    print("  you get 31, 30, 30 residues, not 31 three times.")
 
     print()
     print(rule)
