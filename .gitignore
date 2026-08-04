@@ -9,3 +9,6 @@ __pycache__/
 *.fa.gz
 *.fastq
 *.sam
+
+# local Claude Code settings -- machine-specific, never shared
+.claude/settings.local.json
