@@ -103,7 +103,7 @@ def show(a, b, ali_a, ali_b):
     bars = "".join("|" if x == y else (" " if "-" in (x, y) else ".")
                    for x, y in zip(ali_a, ali_b))
     print(f"    {ali_a}")
-    print(f"    {bars}")
+    print(f"    {bars}   | match   . mismatch   (blank) gap")
     print(f"    {ali_b}")
     matches = bars.count("|")
     print(f"    {matches}/{len(ali_a)} identical  "

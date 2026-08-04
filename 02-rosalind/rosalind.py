@@ -127,10 +127,19 @@ def main():
     print("HAMM -- counting mismatches")
     print(rule)
     a, b = "GAGCCTACTAACGGGAT", "CATCGTAATGACGGCCT"
+    d = hamming(a, b)
+    # '|' for a match is the BLAST convention, but on its own it is a trap
+    # here: the only marked positions would be the ones NOT being counted.
+    # Mark the mismatches explicitly and label the legend.
     print(f"  {a}")
-    print(f"  {''.join('|' if x == y else ' ' for x, y in zip(a, b))}")
+    print(f"  {''.join('|' if x == y else 'x' for x, y in zip(a, b))}"
+          f"   x = mismatch, | = match")
     print(f"  {b}")
-    print(f"  distance = {hamming(a, b)}")
+    print(f"  {''.join(str(i % 10) for i in range(len(a)))}   position")
+    print()
+    print(f"  distance = {d}   ({d} mismatches + {len(a) - d} matches "
+          f"= {len(a)} positions)")
+    print(f"  mismatches at {[i for i, (x, y) in enumerate(zip(a, b)) if x != y]}")
     print("  Note what this CANNOT do: if b had one base deleted, every")
     print("  position after it would count as a mismatch. That failure is")
     print("  the entire motivation for alignment.")
