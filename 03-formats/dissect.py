@@ -120,7 +120,7 @@ def vcf_fields():
     print(f"  This is rs334. Reference says T at chr11:{CONTIG_START + rec.pos - 1:,};")
     print("  this sample carries one T and one A. HBB is on the minus strand,")
     print("  so on the coding strand that is the A>T that module 01 turned into")
-    print("  p.Glu6Val -- sickle cell. Same event, three coordinate conventions.")
+    print("  p.Glu7Val -- sickle cell. Same event, three coordinate conventions.")
 
 
 def pileup_view():

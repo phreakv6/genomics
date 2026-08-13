@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" font-family="Helvetica, Arial, sans-serif">
+  <rect width="640" height="300" rx="8" fill="#faf9f7"/>
+  <style>
+    .lbl { font-size: 13px; fill: #6a6f75; }
+    .flbl { font-size: 13px; fill: #2b2b2b; font-weight: 600; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #2b2b2b; }
+    .tick { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #8a8a8a; }
+    .bar { fill: #ffffff; stroke: #c9c4bb; stroke-width: 1.5; }
+    .hit { fill: rgba(74,127,181,0.25); stroke: #4a7fb5; stroke-width: 1.5; }
+    .map { stroke: #b0413e; stroke-width: 1.5; stroke-dasharray: 4 3; fill: none; }
+  </style>
+
+  <!-- forward sequence bar -->
+  <text x="30" y="52" class="flbl">input sequence (length L = 102)</text>
+  <rect x="30" y="65" width="580" height="30" class="bar"/>
+  <rect x="348" y="65" width="205" height="30" class="hit"/>
+  <text x="30" y="112" class="tick">0</text>
+  <text x="343" y="112" class="tick">56</text>
+  <text x="540" y="112" class="tick">92</text>
+  <text x="596" y="112" class="tick">102</text>
+  <text x="450" y="86" text-anchor="middle" class="mono">the ORF, on this strand</text>
+
+  <!-- reverse complement bar -->
+  <text x="30" y="165" class="flbl">reverse complement (the string you actually searched)</text>
+  <rect x="30" y="178" width="580" height="30" class="bar"/>
+  <rect x="87" y="178" width="205" height="30" class="hit"/>
+  <text x="30" y="225" class="tick">0</text>
+  <text x="82" y="225" class="tick">10</text>
+  <text x="278" y="225" class="tick">46</text>
+  <text x="596" y="225" class="tick">102</text>
+  <text x="190" y="199" text-anchor="middle" class="mono">found at [10, 46)</text>
+
+  <!-- mapping arrows: rc interval endpoints map to L-end, L-start -->
+  <path d="M 87 178 C 150 140, 480 130, 551 95" class="map"/>
+  <path d="M 292 178 C 320 150, 330 130, 350 95" class="map"/>
+
+  <text x="30" y="262" class="lbl">position i of the reverse complement is position L−1−i of the input, so the interval flips end-for-end:</text>
+  <text x="30" y="284" class="mono">forward_start = L−end = 102−46 = 56&#160;&#160;&#160;forward_end = L−start = 102−10 = 92</text>
+</svg>

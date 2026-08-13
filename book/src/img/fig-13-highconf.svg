@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" font-family="Helvetica, Arial, sans-serif">
+  <rect width="640" height="300" rx="8" fill="#faf9f7"/>
+  <style>
+    .lbl { font-size: 13px; fill: #6a6f75; }
+    .flbl { font-size: 13px; fill: #2b2b2b; font-weight: 600; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #2b2b2b; }
+    .hc { fill: rgba(74,127,181,0.25); stroke: #4a7fb5; stroke-width: 1.3; }
+    .ex { fill: rgba(150,150,150,0.2); stroke: #9a9a9a; stroke-width: 1; }
+    .bar { fill: #ffffff; stroke: #c9c4bb; stroke-width: 1.5; }
+    .call { fill: #b0413e; }
+    .v { font-size: 12px; fill: #b0413e; font-weight: 700; text-anchor: middle; }
+    .verdict { font-size: 12px; font-weight: 600; text-anchor: middle; }
+  </style>
+
+  <text x="30" y="40" class="flbl">the genome, as GIAB scores it</text>
+
+  <!-- genome bar: hc segments and excluded segments -->
+  <rect x="30" y="56" width="580" height="34" class="bar"/>
+  <rect x="30"  y="56" width="150" height="34" class="hc"/>
+  <rect x="180" y="56" width="60"  height="34" class="ex"/>
+  <rect x="240" y="56" width="180" height="34" class="hc"/>
+  <rect x="420" y="56" width="80"  height="34" class="ex"/>
+  <rect x="500" y="56" width="110" height="34" class="hc"/>
+
+  <text x="105" y="78" class="mono" text-anchor="middle">high-confidence</text>
+  <text x="210" y="78" class="mono" text-anchor="middle">?</text>
+  <text x="330" y="78" class="mono" text-anchor="middle">high-confidence</text>
+  <text x="460" y="78" class="mono" text-anchor="middle">?</text>
+  <text x="555" y="78" class="mono" text-anchor="middle">high-conf.</text>
+
+  <text x="30" y="118" class="lbl">~90% of the genome: every platform agreed — truth is claimed here.</text>
+  <text x="30" y="136" class="lbl">~10% (segmental duplications, tandem repeats, MHC, centromeres): platforms</text>
+  <text x="30" y="154" class="lbl">disagreed — GIAB withholds judgement. Grey means unknown, not variant-free.</text>
+
+  <!-- calls -->
+  <circle cx="330" cy="196" r="6" class="call"/>
+  <text x="330" y="182" class="v">your call</text>
+  <text x="330" y="226" class="verdict" fill="#4a7fb5">scoreable:</text>
+  <text x="330" y="242" class="verdict" fill="#4a7fb5">TP or FP, honestly</text>
+
+  <circle cx="460" cy="196" r="6" class="call"/>
+  <text x="460" y="182" class="v">your call</text>
+  <text x="460" y="226" class="verdict" fill="#9a9a9a">unscoreable:</text>
+  <text x="460" y="242" class="verdict" fill="#9a9a9a">not FP, not TP — unknown</text>
+
+  <line x1="330" y1="190" x2="330" y2="94" stroke="#b0413e" stroke-width="1" stroke-dasharray="2 3"/>
+  <line x1="460" y1="190" x2="460" y2="94" stroke="#b0413e" stroke-width="1" stroke-dasharray="2 3"/>
+
+  <text x="30" y="282" class="lbl">scoring anything in the grey — as error or as success — is evaluating outside the benchmark’s universe.</text>
+</svg>

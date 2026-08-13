@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" font-family="Helvetica, Arial, sans-serif">
+  <rect width="640" height="320" rx="8" fill="#faf9f7"/>
+  <style>
+    .b   { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 18px; fill: #2b2b2b; text-anchor: middle; }
+    .mut { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 18px; fill: #b0413e; font-weight: 700; text-anchor: middle; }
+    .aa  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #4a7fb5; font-weight: 600; text-anchor: middle; }
+    .aam { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #b0413e; font-weight: 700; text-anchor: middle; }
+    .lbl { font-size: 13px; fill: #6a6f75; }
+    .flbl { font-size: 13px; fill: #2b2b2b; font-weight: 600; }
+    .codon { fill: none; stroke: #c9c4bb; stroke-width: 1.2; }
+    .codonhot { fill: rgba(176,65,62,0.08); stroke: #b0413e; stroke-width: 1.6; }
+    .num { font-size: 11px; fill: #8a8a8a; text-anchor: middle; }
+  </style>
+
+  <!-- HBB CDS bases 16-27 (0-based 15..26): CCT GAG GAG AAG = Pro6 Glu7 Glu8 Lys9.
+       The sickle change is c.20A>T, i.e. the middle base of codon 7 (the FIRST GAG). -->
+  <text x="30" y="46" class="flbl">wild-type HBB coding sequence, codons 6–9</text>
+
+  <!-- wild type row -->
+  <rect x="54"  y="62" width="82" height="30" rx="5" class="codon"/>
+  <rect x="144" y="62" width="82" height="30" rx="5" class="codonhot"/>
+  <rect x="234" y="62" width="82" height="30" rx="5" class="codon"/>
+  <rect x="324" y="62" width="82" height="30" rx="5" class="codon"/>
+  <text x="69"  y="84" class="b">C</text><text x="95"  y="84" class="b">C</text><text x="121" y="84" class="b">T</text>
+  <text x="159" y="84" class="b">G</text><text x="185" y="84" class="b">A</text><text x="211" y="84" class="b">G</text>
+  <text x="249" y="84" class="b">G</text><text x="275" y="84" class="b">A</text><text x="301" y="84" class="b">G</text>
+  <text x="339" y="84" class="b">A</text><text x="365" y="84" class="b">A</text><text x="391" y="84" class="b">G</text>
+  <text x="95"  y="112" class="aa">Pro 6</text>
+  <text x="185" y="112" class="aa">Glu 7</text>
+  <text x="275" y="112" class="aa">Glu 8</text>
+  <text x="365" y="112" class="aa">Lys 9</text>
+
+  <!-- mutation arrow -->
+  <text x="185" y="146" class="num">c.20A&gt;T — one base, out of ~3 billion</text>
+  <line x1="185" y1="152" x2="185" y2="172" stroke="#b0413e" stroke-width="1.6"/>
+  <path d="M180,166 L185,174 L190,166" stroke="#b0413e" stroke-width="1.6" fill="none"/>
+
+  <!-- mutant row -->
+  <text x="30" y="196" class="flbl">sickle allele (rs334)</text>
+  <rect x="54"  y="206" width="82" height="30" rx="5" class="codon"/>
+  <rect x="144" y="206" width="82" height="30" rx="5" class="codonhot"/>
+  <rect x="234" y="206" width="82" height="30" rx="5" class="codon"/>
+  <rect x="324" y="206" width="82" height="30" rx="5" class="codon"/>
+  <text x="69"  y="228" class="b">C</text><text x="95"  y="228" class="b">C</text><text x="121" y="228" class="b">T</text>
+  <text x="159" y="228" class="b">G</text><text x="185" y="228" class="mut">T</text><text x="211" y="228" class="b">G</text>
+  <text x="249" y="228" class="b">G</text><text x="275" y="228" class="b">A</text><text x="301" y="228" class="b">G</text>
+  <text x="339" y="228" class="b">A</text><text x="365" y="228" class="b">A</text><text x="391" y="228" class="b">G</text>
+  <text x="95"  y="256" class="aa">Pro 6</text>
+  <text x="185" y="256" class="aam">Val 7</text>
+  <text x="275" y="256" class="aa">Glu 8</text>
+  <text x="365" y="256" class="aa">Lys 9</text>
+
+  <text x="440" y="224" class="lbl">Glu (charged, water-loving)</text>
+  <text x="440" y="241" class="lbl">→ Val (greasy). The sticky</text>
+  <text x="440" y="258" class="lbl">patch makes haemoglobin</text>
+  <text x="440" y="275" class="lbl">polymerise into fibres.</text>
+
+  <text x="30" y="300" class="lbl">HGVS numbers from the initiator Met (p.Glu7Val); older “mature” numbering drops that Met, hence “E6V”</text>
+</svg>

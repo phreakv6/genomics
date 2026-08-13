@@ -72,7 +72,7 @@ CODON_TABLE = {
     "GGU": "G", "GGC": "G", "GGA": "G", "GGG": "G",
 }
 
-# Three-letter names, for reading variant notation like p.Glu6Val.
+# Three-letter names, for reading variant notation like p.Glu7Val.
 AA_NAMES = {
     "A": "Ala", "R": "Arg", "N": "Asn", "D": "Asp", "C": "Cys", "E": "Glu",
     "Q": "Gln", "G": "Gly", "H": "His", "I": "Ile", "L": "Leu", "K": "Lys",

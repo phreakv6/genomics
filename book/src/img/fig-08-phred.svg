@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 310" font-family="Helvetica, Arial, sans-serif">
+  <rect width="640" height="310" rx="8" fill="#faf9f7"/>
+  <style>
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #2b2b2b; }
+    .ytick { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #8a8a8a; text-anchor: end; }
+    .lbl { font-size: 13px; fill: #6a6f75; }
+    .flbl { font-size: 13px; fill: #2b2b2b; font-weight: 600; }
+    .axis { stroke: #c9c4bb; stroke-width: 1.5; }
+    .curve { stroke: #4a7fb5; stroke-width: 2.2; }
+    .mark { fill: #b0413e; }
+    .marklbl { font-size: 12px; fill: #b0413e; font-weight: 600; }
+    .marklblr { font-size: 12px; fill: #b0413e; font-weight: 600; text-anchor: end; }
+  </style>
+
+  <text x="30" y="36" class="flbl">Q = −10 · log₁₀ P(base call is wrong) — stored as chr(Q + 33)</text>
+
+  <!-- plot area: x 80..560 (Q 0..40), y 70..230 (P from 1 down to 1e-4, log scale).
+       On a log axis P(error) is linear in Q, descending: y(Q) = 70 + 4Q. -->
+  <line x1="80" y1="230" x2="580" y2="230" class="axis"/>
+  <line x1="80" y1="230" x2="80" y2="62" class="axis"/>
+
+  <!-- y tick labels (log scale) -->
+  <text x="74" y="74"  class="ytick">1</text>
+  <text x="74" y="154" class="ytick">10⁻²</text>
+  <text x="74" y="234" class="ytick">10⁻⁴</text>
+  <text x="36" y="52" class="lbl">P(error)</text>
+
+  <!-- descending line: Q0 (80,70) to Q40 (560,230) -->
+  <line x1="80" y1="70" x2="560" y2="230" class="curve"/>
+
+  <!-- x ticks: Q=0,10,20,30,40 at x=80,200,320,440,560 -->
+  <text x="80"  y="250" class="mono" text-anchor="middle">0</text>
+  <text x="200" y="250" class="mono" text-anchor="middle">10</text>
+  <text x="320" y="250" class="mono" text-anchor="middle">20</text>
+  <text x="440" y="250" class="mono" text-anchor="middle">30</text>
+  <text x="560" y="250" class="mono" text-anchor="middle">40</text>
+  <text x="320" y="276" class="lbl" text-anchor="middle">Phred quality Q</text>
+
+  <!-- marks along the line: y = 70 + 4Q -->
+  <circle cx="200" cy="110" r="4" class="mark"/>
+  <text x="212" y="104" class="marklbl">Q10 = 1 error in 10</text>
+  <circle cx="320" cy="150" r="4" class="mark"/>
+  <text x="332" y="144" class="marklbl">Q20 = 1 in 100</text>
+  <circle cx="440" cy="190" r="4" class="mark"/>
+  <text x="452" y="184" class="marklbl">Q30 = 1 in 1,000 — “good data”</text>
+  <circle cx="560" cy="230" r="4" class="mark"/>
+  <text x="544" y="214" class="marklblr">Q40 = ‘I’ = 1 in 10,000</text>
+
+  <text x="80" y="300" class="lbl">the y axis is logarithmic — every 10 points of Q is 10× fewer errors</text>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 330" font-family="Helvetica, Arial, sans-serif">
+  <rect width="640" height="330" rx="8" fill="#faf9f7"/>
+  <style>
+    .lbl { font-size: 13px; fill: #6a6f75; }
+    .flbl { font-size: 13px; fill: #2b2b2b; font-weight: 600; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #2b2b2b; }
+    .cig { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 15px; font-weight: 700; }
+    .refbar { fill: #ffffff; stroke: #c9c4bb; stroke-width: 1.5; }
+    .m { fill: rgba(74,127,181,0.25); stroke: #4a7fb5; stroke-width: 1.3; }
+    .d { fill: rgba(176,65,62,0.15); stroke: #b0413e; stroke-width: 1.3; stroke-dasharray: 3 3; }
+    .i { fill: rgba(176,65,62,0.25); stroke: #b0413e; stroke-width: 1.3; }
+    .s { fill: rgba(150,150,150,0.18); stroke: #9a9a9a; stroke-width: 1.3; }
+  </style>
+
+  <!-- reference track -->
+  <text x="30" y="40" class="flbl">reference</text>
+  <rect x="120" y="28" width="490" height="20" class="refbar"/>
+
+  <!-- Read 1: 100M -->
+  <text x="30" y="88" class="cig" fill="#4a7fb5">100M</text>
+  <rect x="150" y="74" width="200" height="20" class="m"/>
+  <text x="360" y="81" class="lbl">100 bases aligned, end to end</text>
+  <text x="360" y="97" class="lbl">(M allows mismatches!)</text>
+
+  <!-- Read 2: 50M 2D 48M -->
+  <text x="30" y="146" class="cig" fill="#b0413e">50M2D48M</text>
+  <rect x="150" y="132" width="100" height="20" class="m"/>
+  <rect x="250" y="132" width="14" height="20" class="d"/>
+  <rect x="264" y="132" width="96" height="20" class="m"/>
+  <text x="375" y="139" class="lbl">read skips 2 reference bases:</text>
+  <text x="375" y="155" class="lbl">a 2bp deletion in this sample</text>
+
+  <!-- Read 3: 10S 90M -->
+  <text x="30" y="204" class="cig" fill="#9a9a9a">10S90M</text>
+  <rect x="130" y="190" width="20" height="20" class="s"/>
+  <rect x="150" y="190" width="180" height="20" class="m"/>
+  <text x="345" y="197" class="lbl">first 10 bases present in the read but</text>
+  <text x="345" y="213" class="lbl">not aligned — “soft-clipped”, hanging off</text>
+
+  <!-- Read 4: 60M 3I 37M -->
+  <text x="30" y="262" class="cig" fill="#b0413e">60M3I37M</text>
+  <rect x="150" y="248" width="120" height="20" class="m"/>
+  <rect x="264" y="240" width="12" height="14" class="i"/>
+  <rect x="270" y="248" width="74" height="20" class="m"/>
+  <text x="360" y="255" class="lbl">3 extra bases in the read that the reference</text>
+  <text x="360" y="271" class="lbl">lacks: an insertion, bulging out of the alignment</text>
+
+  <text x="30" y="312" class="lbl">CIGAR = run-length-encoded edit script, read vs reference. Piles of soft clips at one</text>
+  <text x="30" y="328" class="lbl">position often mean a structural variant breakpoint — the clips are a signal, not noise.</text>
+</svg>

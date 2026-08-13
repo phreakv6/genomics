@@ -2,9 +2,17 @@
 
 A generalist's path into genomics, built with Claude Code. Public data only, laptop only.
 
-Five modules, in order. Each has a `theory.md` you read and code you run, and the point isn't to
-type the code — it's to understand what every line does and why the field works that way. The
-prose and the functions map onto each other deliberately.
+Five modules, in order — code you run, and a **book** you read alongside it:
+
+## 📖 The book
+
+**[A Generalist's Path into Genomics](https://phreakv6.github.io/genomics/)** — the full theory
+behind these modules, written as a 17-chapter book with figures, real program output, and the
+repo's code interspersed. Each part of the book maps to one module; each module's `theory.md`
+points to its chapters. (Sources live in [`book/`](book/src/SUMMARY.md) and render on GitHub too.)
+
+The point isn't to type the code — it's to understand what every line does and why the field
+works that way. The book and the functions map onto each other deliberately.
 
 Written by a software engineer and investor learning this from scratch, so it assumes you can
 program and know statistics, and assumes nothing about biology. If you want to learn alongside,

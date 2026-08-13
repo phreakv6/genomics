@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 310" font-family="Helvetica, Arial, sans-serif">
+  <rect width="640" height="310" rx="8" fill="#faf9f7"/>
+  <style>
+    .b   { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 19px; fill: #2b2b2b; text-anchor: middle; }
+    .idx { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #8a8a8a; text-anchor: middle; }
+    .hot { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #4a7fb5; font-weight: 700; text-anchor: middle; }
+    .lbl { font-size: 13px; fill: #6a6f75; }
+    .flbl { font-size: 13px; fill: #2b2b2b; font-weight: 600; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #2b2b2b; }
+    .hit { fill: rgba(74,127,181,0.18); stroke: #4a7fb5; stroke-width: 1.5; }
+    .cell { fill: none; stroke: #dcd7cf; stroke-width: 1; }
+    .tick { stroke: #b9b3a9; stroke-width: 1; }
+  </style>
+
+  <!-- 10 cells, width 46, x0=90. Base i (1-based) center = 113+(i-1)*46.
+       Feature GTAC = 1-based 3-6 = cells 3..6 -> rect x=182 w=184. -->
+  <text x="30" y="80" class="flbl">sequence</text>
+  <rect x="182" y="58" width="184" height="34" class="hit"/>
+  <rect x="90"  y="58" width="46" height="34" class="cell"/><rect x="136" y="58" width="46" height="34" class="cell"/>
+  <rect x="182" y="58" width="46" height="34" class="cell"/><rect x="228" y="58" width="46" height="34" class="cell"/>
+  <rect x="274" y="58" width="46" height="34" class="cell"/><rect x="320" y="58" width="46" height="34" class="cell"/>
+  <rect x="366" y="58" width="46" height="34" class="cell"/><rect x="412" y="58" width="46" height="34" class="cell"/>
+  <rect x="458" y="58" width="46" height="34" class="cell"/><rect x="504" y="58" width="46" height="34" class="cell"/>
+  <text x="113" y="82" class="b">A</text><text x="159" y="82" class="b">C</text><text x="205" y="82" class="b">G</text>
+  <text x="251" y="82" class="b">T</text><text x="297" y="82" class="b">A</text><text x="343" y="82" class="b">C</text>
+  <text x="389" y="82" class="b">G</text><text x="435" y="82" class="b">T</text><text x="481" y="82" class="b">A</text>
+  <text x="527" y="82" class="b">C</text>
+
+  <!-- 1-based: numbers the bases (under cell centers) -->
+  <text x="30" y="124" class="flbl">1-based</text>
+  <text x="113" y="124" class="idx">1</text><text x="159" y="124" class="idx">2</text>
+  <text x="205" y="124" class="hot">3</text><text x="251" y="124" class="hot">4</text>
+  <text x="297" y="124" class="hot">5</text><text x="343" y="124" class="hot">6</text>
+  <text x="389" y="124" class="idx">7</text><text x="435" y="124" class="idx">8</text>
+  <text x="481" y="124" class="idx">9</text><text x="527" y="124" class="idx">10</text>
+  <text x="570" y="124" class="lbl">the bases</text>
+
+  <!-- 0-based: numbers the boundaries (ticks at cell edges) -->
+  <text x="30" y="168" class="flbl">0-based</text>
+  <line x1="90"  y1="140" x2="90"  y2="150" class="tick"/><line x1="136" y1="140" x2="136" y2="150" class="tick"/>
+  <line x1="182" y1="140" x2="182" y2="150" class="tick"/><line x1="228" y1="140" x2="228" y2="150" class="tick"/>
+  <line x1="274" y1="140" x2="274" y2="150" class="tick"/><line x1="320" y1="140" x2="320" y2="150" class="tick"/>
+  <line x1="366" y1="140" x2="366" y2="150" class="tick"/><line x1="412" y1="140" x2="412" y2="150" class="tick"/>
+  <line x1="458" y1="140" x2="458" y2="150" class="tick"/><line x1="504" y1="140" x2="504" y2="150" class="tick"/>
+  <line x1="550" y1="140" x2="550" y2="150" class="tick"/>
+  <text x="90"  y="168" class="idx">0</text><text x="136" y="168" class="idx">1</text>
+  <text x="182" y="168" class="hot">2</text><text x="228" y="168" class="idx">3</text>
+  <text x="274" y="168" class="idx">4</text><text x="320" y="168" class="idx">5</text>
+  <text x="366" y="168" class="hot">6</text><text x="412" y="168" class="idx">7</text>
+  <text x="458" y="168" class="idx">8</text><text x="504" y="168" class="idx">9</text>
+  <text x="550" y="168" class="idx">10</text>
+  <text x="574" y="168" class="lbl">the gaps</text>
+
+  <text x="30" y="212" class="flbl">the highlighted GTAC, in each convention:</text>
+  <text x="50" y="240" class="mono">BED  (0-based, half-open):  chr1  2  6    (length = 6−2, no +1)</text>
+  <text x="50" y="262" class="mono">GFF  (1-based, closed):     chr1  3  6</text>
+  <text x="50" y="284" class="mono">Python: SEQ[2:6] = 'GTAC' — BED numbers drop straight into a slice</text>
+</svg>

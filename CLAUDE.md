@@ -8,8 +8,23 @@ Public data only, laptop only. It is on GitHub (`phreakv6/genomics`, public) so
 others can learn alongside.
 
 The five modules run central dogma → Rosalind/alignment → file formats → a real
-GIAB variant-calling pipeline → 1000 Genomes PCA. Each has a `theory.md` and
-runnable code. See `README.md` for results and `SETUP.md` for environment.
+GIAB variant-calling pipeline → 1000 Genomes PCA. Each has runnable code; the
+theory lives in **the book** (`book/`, mdBook, published to GitHub Pages by
+`.github/workflows/book.yml`). Each module's `theory.md` is now just a pointer
+to its book chapters — the book is the single source of truth for prose. See
+`README.md` for results and `SETUP.md` for environment.
+
+## The book
+
+`book/src/` holds 17 chapters + front/back matter mapping 1:1 onto the modules
+(Part I = module 01 … Part V = module 05). Figures are hand-authored SVG in
+`book/src/img/`. Build locally with `mdbook build book` (mdBook 0.5.x via
+Homebrew; CI pins the same version). `book/build/` is gitignored.
+
+**Book rule, inherited from the repo rule:** every output block in a chapter
+is captured from an actual run of the module scripts, and every number in
+prose is checked against a run or the README results table. When code output
+changes, the chapter quoting it must be re-captured, not hand-edited.
 
 ## How he wants to work
 
@@ -73,11 +88,17 @@ that is why stray index files appear in the repo root.
   where strand, exons and gene names actually live. Planned addition to module
   03: pull the real HBB GTF, read the strand column, rebuild the CDS from the
   exon list, and show it matching the `HBB_CDS` constant hardcoded in module 01.
-  **Deliberately parked** until he is further along.
-- `03-formats/dissect.py` closing note still says `p.Glu6Val`, inconsistent
-  with module 01's corrected HGVS numbering. Small, unfixed.
+  **Deliberately parked** until he is further along. The book reserves
+  Chapter 12 (`book/src/ch12-annotation.md`) for it — currently an honest stub
+  with the planned demonstration outlined; write the chapter when the code
+  lands.
 - `check_env.sh`'s Linux branch and the non-`CONDA_SUBDIR` setup path are
   written from knowledge, never tested. First Linux learner is the real test.
+  (The CI book build exercises Linux, but only for mdBook, not the conda env.)
+
+(Resolved: the stale `p.Glu6Val` in `03-formats/dissect.py` and in a
+`central_dogma.py` comment were fixed to `p.Glu7Val` when the book absorbed
+the theory files, 2026-08-13.)
 
 ## Origin
 

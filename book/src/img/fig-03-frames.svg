@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" font-family="Helvetica, Arial, sans-serif">
+  <rect width="640" height="280" rx="8" fill="#faf9f7"/>
+  <style>
+    .b   { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 19px; fill: #2b2b2b; text-anchor: middle; }
+    .aa  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 14px; fill: #4a7fb5; font-weight: 600; text-anchor: middle; }
+    .lbl { font-size: 13px; fill: #6a6f75; }
+    .flbl { font-size: 13px; fill: #2b2b2b; font-weight: 600; }
+    .codon { fill: none; stroke: #4a7fb5; stroke-width: 1.4; }
+    .dead { fill: #b0413e; font-size: 12px; }
+    .deadbox { fill: rgba(176,65,62,0.10); stroke: #b0413e; stroke-width: 1; stroke-dasharray: 3 3; }
+  </style>
+
+  <text x="30" y="38" class="lbl">the same 10 bases, read in two different frames:</text>
+
+  <!-- base x centers: cx(i) = 120 + i*34, i = 0..9 -->
+  <!-- ===== frame +1 ===== -->
+  <text x="30" y="95" class="flbl">frame +1</text>
+  <rect x="103" y="72" width="102" height="32" rx="5" class="codon"/>
+  <rect x="205" y="72" width="102" height="32" rx="5" class="codon"/>
+  <rect x="307" y="72" width="102" height="32" rx="5" class="codon"/>
+  <rect x="409" y="72" width="34"  height="32" rx="5" class="deadbox"/>
+  <text x="120" y="95" class="b">A</text><text x="154" y="95" class="b">T</text><text x="188" y="95" class="b">G</text>
+  <text x="222" y="95" class="b">G</text><text x="256" y="95" class="b">T</text><text x="290" y="95" class="b">G</text>
+  <text x="324" y="95" class="b">C</text><text x="358" y="95" class="b">A</text><text x="392" y="95" class="b">T</text>
+  <text x="426" y="95" class="b">C</text>
+  <text x="154" y="126" class="aa">Met</text>
+  <text x="256" y="126" class="aa">Val</text>
+  <text x="358" y="126" class="aa">His</text>
+  <text x="460" y="87" class="dead">1 base left over —</text>
+  <text x="460" y="101" class="dead">not a codon, discarded</text>
+
+  <!-- ===== frame +2 ===== -->
+  <text x="30" y="185" class="flbl">frame +2</text>
+  <rect x="103" y="162" width="34"  height="32" rx="5" class="deadbox"/>
+  <rect x="137" y="162" width="102" height="32" rx="5" class="codon"/>
+  <rect x="239" y="162" width="102" height="32" rx="5" class="codon"/>
+  <rect x="341" y="162" width="102" height="32" rx="5" class="codon"/>
+  <text x="120" y="185" class="b">A</text>
+  <text x="154" y="185" class="b">T</text><text x="188" y="185" class="b">G</text><text x="222" y="185" class="b">G</text>
+  <text x="256" y="185" class="b">T</text><text x="290" y="185" class="b">G</text><text x="324" y="185" class="b">C</text>
+  <text x="358" y="185" class="b">A</text><text x="392" y="185" class="b">T</text><text x="426" y="185" class="b">C</text>
+  <text x="188" y="216" class="aa">Trp</text>
+  <text x="290" y="216" class="aa">Cys</text>
+  <text x="392" y="216" class="aa">Ile</text>
+  <text x="460" y="171" class="dead">starts 1 base in, so every</text>
+  <text x="460" y="185" class="dead">codon boundary moves</text>
+
+  <text x="30" y="256" class="lbl">different proteins from the same bases — and the reverse complement adds three more frames</text>
+</svg>

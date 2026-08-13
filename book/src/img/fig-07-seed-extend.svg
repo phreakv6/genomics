@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 330" font-family="Helvetica, Arial, sans-serif">
+  <rect width="640" height="330" rx="8" fill="#faf9f7"/>
+  <style>
+    .lbl { font-size: 13px; fill: #6a6f75; }
+    .flbl { font-size: 13px; fill: #2b2b2b; font-weight: 600; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #2b2b2b; }
+    .bar { fill: #ffffff; stroke: #c9c4bb; stroke-width: 1.5; }
+    .seed { fill: #4a7fb5; }
+    .win { fill: rgba(74,127,181,0.15); stroke: #4a7fb5; stroke-width: 1.3; stroke-dasharray: 4 3; }
+    .read { fill: rgba(176,65,62,0.15); stroke: #b0413e; stroke-width: 1.5; }
+    .step { font-size: 12.5px; fill: #4a7fb5; font-weight: 600; }
+  </style>
+
+  <!-- the read -->
+  <text x="30" y="40" class="flbl">the read (150 bp)</text>
+  <rect x="30" y="50" width="180" height="22" class="read"/>
+  <rect x="60" y="50" width="28" height="22" class="seed"/>
+  <rect x="140" y="50" width="28" height="22" class="seed"/>
+  <text x="220" y="66" class="lbl">short exact chunks of it — seeds — are looked up in the index</text>
+
+  <!-- step 1 -->
+  <text x="30" y="112" class="step">1. seed lookup — FM-index, microseconds, O(seed length)</text>
+
+  <!-- the genome -->
+  <text x="30" y="146" class="flbl">the genome (3.1 Gbp)</text>
+  <rect x="30" y="156" width="580" height="26" class="bar"/>
+  <!-- seed hits -->
+  <rect x="120" y="156" width="8" height="26" class="seed"/>
+  <rect x="345" y="156" width="8" height="26" class="seed"/>
+  <rect x="352" y="156" width="8" height="26" class="seed"/>
+  <rect x="530" y="156" width="8" height="26" class="seed"/>
+  <text x="124" y="200" class="mono" text-anchor="middle">hit</text>
+  <text x="352" y="200" class="mono" text-anchor="middle">two hits, consistent spacing</text>
+  <text x="534" y="200" class="mono" text-anchor="middle">hit</text>
+
+  <!-- step 2 -->
+  <text x="30" y="240" class="step">2. extend — Smith–Waterman DP, but only inside tiny candidate windows</text>
+  <rect x="330" y="252" width="60" height="26" class="win"/>
+  <rect x="100" y="252" width="48" height="26" class="win"/>
+  <rect x="508" y="252" width="48" height="26" class="win"/>
+  <text x="30" y="270" class="flbl">windows:</text>
+  <line x1="124" y1="182" x2="124" y2="252" stroke="#c9c4bb" stroke-width="1" stroke-dasharray="2 3"/>
+  <line x1="352" y1="182" x2="356" y2="252" stroke="#c9c4bb" stroke-width="1" stroke-dasharray="2 3"/>
+  <line x1="534" y1="182" x2="532" y2="252" stroke="#c9c4bb" stroke-width="1" stroke-dasharray="2 3"/>
+
+  <text x="30" y="308" class="lbl">DP cost drops from (genome × read) to (window × read) × a few windows —</text>
+  <text x="30" y="324" class="lbl">the window with multiple agreeing seeds usually wins.</text>
+</svg>

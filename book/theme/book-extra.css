@@ -1,0 +1,93 @@
+/* Book typography and figure styling, layered on mdBook's default themes.
+   Kept theme-aware: colours derive from mdBook's CSS variables where possible. */
+
+:root {
+    --fig-caption-color: #6a6f75;
+    --callout-border: #4a7fb5;
+    --callout-bg: rgba(74, 127, 181, 0.07);
+    --output-bg: #f6f5f2;
+    --output-border: #ddd8d0;
+}
+
+.ayu, .navy, .coal {
+    --fig-caption-color: #9a9fa5;
+    --callout-bg: rgba(74, 127, 181, 0.15);
+    --output-bg: #14181d;
+    --output-border: #2b323b;
+}
+
+/* Prose: serif body like a printed book; keep headings in the theme sans. */
+.content main {
+    font-family: "Charter", "Iowan Old Style", "Palatino", "Georgia", serif;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    max-width: 46rem;
+}
+
+.content main h1, .content main h2, .content main h3, .content main h4 {
+    font-family: "Avenir Next", "Seravek", "Helvetica Neue", "Segoe UI", sans-serif;
+    letter-spacing: -0.01em;
+}
+
+.content main h1 { margin-top: 0.5em; }
+.content main h2 { margin-top: 2.2em; }
+.content main h3 { margin-top: 1.8em; }
+
+/* Figures: centred, captioned. */
+figure {
+    margin: 2em auto;
+    text-align: center;
+}
+
+figure img, figure svg {
+    max-width: 100%;
+    height: auto;
+}
+
+figcaption {
+    margin-top: 0.7em;
+    font-family: "Avenir Next", "Seravek", "Helvetica Neue", "Segoe UI", sans-serif;
+    font-size: 0.85rem;
+    color: var(--fig-caption-color);
+    text-align: center;
+    max-width: 38rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Program output: distinguished from source code by a left rule and flat
+   background, the way a book sets a terminal transcript. Applied to
+   ```text blocks via the language class mdBook emits. */
+pre code.language-text, pre code.language-console {
+    display: block;
+    background: var(--output-bg);
+    border-left: 3px solid var(--output-border);
+    border-radius: 0;
+}
+
+/* Callout boxes: blockquotes get a book-style sidebar treatment. */
+.content main blockquote {
+    border-left: 3px solid var(--callout-border);
+    background: var(--callout-bg);
+    padding: 0.7em 1.2em;
+    margin: 1.6em 0;
+    font-size: 0.97rem;
+}
+
+.content main blockquote p:first-child strong:first-child {
+    font-family: "Avenir Next", "Seravek", "Helvetica Neue", "Segoe UI", sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Tables: lighter, book-like rules. */
+.content main table {
+    margin: 1.6em auto;
+    font-size: 0.95rem;
+}
+
+/* Slightly tighter inline code so it sits well in serif prose. */
+.content main :not(pre) > code {
+    font-size: 0.86em;
+}

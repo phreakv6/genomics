@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" font-family="Helvetica, Arial, sans-serif">
+  <rect width="640" height="300" rx="8" fill="#faf9f7"/>
+  <style>
+    .b   { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 17px; fill: #2b2b2b; text-anchor: middle; }
+    .del { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 17px; fill: #b0413e; text-anchor: middle; }
+    .lbl { font-size: 13px; fill: #6a6f75; }
+    .flbl { font-size: 13px; fill: #2b2b2b; font-weight: 600; }
+    .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; fill: #2b2b2b; }
+    .box { fill: rgba(176,65,62,0.10); stroke: #b0413e; stroke-width: 1.2; stroke-dasharray: 3 3; }
+    .idx { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px; fill: #8a8a8a; text-anchor: middle; }
+  </style>
+
+  <text x="30" y="40" class="flbl">reference: a run of five A's, positions 100–104. The sample deleted one A. Which one?</text>
+
+  <!-- reference bases; x = 120 + i*40 -->
+  <text x="30" y="84" class="lbl">reference</text>
+  <text x="140" y="84" class="b">A</text><text x="180" y="84" class="b">A</text><text x="220" y="84" class="b">A</text>
+  <text x="260" y="84" class="b">A</text><text x="300" y="84" class="b">A</text>
+  <text x="140" y="104" class="idx">100</text><text x="180" y="104" class="idx">101</text><text x="220" y="104" class="idx">102</text>
+  <text x="260" y="104" class="idx">103</text><text x="300" y="104" class="idx">104</text>
+
+  <text x="360" y="84" class="lbl">the deleted A is physically indistinguishable —</text>
+  <text x="360" y="101" class="lbl">the event has no unique coordinate</text>
+
+  <!-- three spellings -->
+  <text x="30" y="150" class="flbl">three legal VCF spellings of the same event:</text>
+  <text x="50" y="180" class="mono">POS=100  REF=AA  ALT=A     “delete the A at 101”</text>
+  <text x="50" y="204" class="mono">POS=101  REF=AA  ALT=A     “delete the A at 102”</text>
+  <text x="50" y="228" class="mono">POS=103  REF=AA  ALT=A     “delete the A at 104”</text>
+
+  <text x="30" y="266" class="lbl">a naive position+string comparison sees three different variants — one call scored as both</text>
+  <text x="30" y="284" class="lbl">a false positive AND a false negative. bcftools norm left-aligns all three to POS=100.</text>
+</svg>

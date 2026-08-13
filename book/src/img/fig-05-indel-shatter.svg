@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 310" font-family="Helvetica, Arial, sans-serif">
+  <rect width="640" height="310" rx="8" fill="#faf9f7"/>
+  <style>
+    .b   { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 17px; fill: #2b2b2b; text-anchor: middle; }
+    .bad { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 17px; fill: #b0413e; text-anchor: middle; }
+    .ok  { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 14px; fill: #4a7fb5; text-anchor: middle; }
+    .x   { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 14px; fill: #b0413e; text-anchor: middle; }
+    .lbl { font-size: 13px; fill: #6a6f75; }
+    .flbl { font-size: 13px; fill: #2b2b2b; font-weight: 600; }
+    .gap { fill: rgba(176,65,62,0.10); stroke: #b0413e; stroke-width: 1; stroke-dasharray: 3 3; }
+  </style>
+
+  <!-- a = GATTACAGTC; b = a with the T at index 3 deleted = GATACAGTC.
+       Position-by-position: 0-2 match, 3-8 all mismatch, 9 unpaired. -->
+  <text x="30" y="40" class="flbl">position-by-position comparison after a single deletion</text>
+
+  <!-- sequence a; x centers 90 + i*38 -->
+  <text x="30" y="86" class="lbl">a</text>
+  <text x="90"  y="86" class="b">G</text><text x="128" y="86" class="b">A</text><text x="166" y="86" class="b">T</text>
+  <text x="204" y="86" class="b">T</text><text x="242" y="86" class="b">A</text><text x="280" y="86" class="b">C</text>
+  <text x="318" y="86" class="b">A</text><text x="356" y="86" class="b">G</text><text x="394" y="86" class="b">T</text>
+  <text x="432" y="86" class="b">C</text>
+
+  <!-- comparison marks -->
+  <text x="90"  y="116" class="ok">|</text><text x="128" y="116" class="ok">|</text><text x="166" y="116" class="ok">|</text>
+  <text x="204" y="116" class="x">x</text><text x="242" y="116" class="x">x</text><text x="280" y="116" class="x">x</text>
+  <text x="318" y="116" class="x">x</text><text x="356" y="116" class="x">x</text><text x="394" y="116" class="x">x</text>
+  <text x="432" y="116" class="x">?</text>
+
+  <!-- sequence b: T at index 3 deleted, everything shifts left -->
+  <text x="30" y="146" class="lbl">b</text>
+  <text x="90"  y="146" class="b">G</text><text x="128" y="146" class="b">A</text><text x="166" y="146" class="b">T</text>
+  <text x="204" y="146" class="bad">A</text><text x="242" y="146" class="bad">C</text><text x="280" y="146" class="bad">A</text>
+  <text x="318" y="146" class="bad">G</text><text x="356" y="146" class="bad">T</text><text x="394" y="146" class="bad">C</text>
+  <text x="432" y="146" class="bad">·</text>
+
+  <text x="30" y="182" class="lbl">b is identical to a except one deleted T — but every base after the deletion is</text>
+  <text x="30" y="199" class="lbl">out of register: 6 “mismatches”, plus a length difference Hamming can’t even accept.</text>
+
+  <!-- aligned version -->
+  <text x="30" y="238" class="flbl">what alignment sees</text>
+  <text x="90"  y="266" class="b">G</text><text x="128" y="266" class="b">A</text><text x="166" y="266" class="b">T</text>
+  <rect x="187" y="248" width="34" height="26" class="gap"/>
+  <text x="204" y="266" class="bad">–</text>
+  <text x="242" y="266" class="b">A</text><text x="280" y="266" class="b">C</text><text x="318" y="266" class="b">A</text>
+  <text x="356" y="266" class="b">G</text><text x="394" y="266" class="b">T</text><text x="432" y="266" class="b">C</text>
+  <text x="90" y="298" class="lbl">one event, one gap, zero mismatches — the truth</text>
+</svg>

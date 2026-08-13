@@ -12,3 +12,6 @@ __pycache__/
 
 # local Claude Code settings -- machine-specific, never shared
 .claude/settings.local.json
+
+# mdBook build output -- rebuilt by CI, never committed
+book/build/

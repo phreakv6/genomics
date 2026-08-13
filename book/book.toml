@@ -1,0 +1,20 @@
+[book]
+title = "A Generalist's Path into Genomics"
+authors = ["Bharani Manoharan"]
+description = "The theory behind the phreakv6/genomics modules, written as a book: central dogma, alignment, file formats, a real variant-calling pipeline, and population structure."
+language = "en"
+src = "src"
+
+[build]
+build-dir = "build"
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "ayu"
+additional-css = ["theme/book-extra.css"]
+git-repository-url = "https://github.com/phreakv6/genomics"
+edit-url-template = "https://github.com/phreakv6/genomics/edit/main/book/{path}"
+
+[output.html.fold]
+enable = true
+level = 1
