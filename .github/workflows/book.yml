@@ -33,6 +33,10 @@ jobs:
       - name: Build
         run: mdbook build book
       - uses: actions/configure-pages@v5
+        with:
+          # First run on a repo without Pages enabled: create the Pages site
+          # (build_type: workflow) instead of failing with Not Found.
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: book/build
