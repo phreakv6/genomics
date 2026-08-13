@@ -1,5 +1,10 @@
 /* Book typography and figure styling, layered on mdBook's default themes.
-   Kept theme-aware: colours derive from mdBook's CSS variables where possible. */
+   Kept theme-aware: colours derive from mdBook's CSS variables where possible.
+
+   NOTE ON UNITS: mdBook sets `html { font-size: 62.5% }`, so 1rem = 10px,
+   not the browser-default 16px. Every rem value below is written against
+   that 10px scale (1.8rem = 18px). Sizing in 16px-assumed rems here once
+   shipped a book with 10px body text. */
 
 :root {
     --fig-caption-color: #6a6f75;
@@ -19,9 +24,9 @@
 /* Prose: serif body like a printed book; keep headings in the theme sans. */
 .content main {
     font-family: "Charter", "Iowan Old Style", "Palatino", "Georgia", serif;
-    font-size: 1.05rem;
+    font-size: 1.8rem;              /* 18px */
     line-height: 1.65;
-    max-width: 46rem;
+    max-width: 72rem;               /* 720px — ~70 characters at 18px */
 }
 
 .content main h1, .content main h2, .content main h3, .content main h4 {
@@ -47,10 +52,10 @@ figure img, figure svg {
 figcaption {
     margin-top: 0.7em;
     font-family: "Avenir Next", "Seravek", "Helvetica Neue", "Segoe UI", sans-serif;
-    font-size: 0.85rem;
+    font-size: 1.4rem;              /* 14px */
     color: var(--fig-caption-color);
     text-align: center;
-    max-width: 38rem;
+    max-width: 58rem;
     margin-left: auto;
     margin-right: auto;
 }
@@ -71,12 +76,12 @@ pre code.language-text, pre code.language-console {
     background: var(--callout-bg);
     padding: 0.7em 1.2em;
     margin: 1.6em 0;
-    font-size: 0.97rem;
+    font-size: 1.65rem;             /* 16.5px — slightly under body */
 }
 
 .content main blockquote p:first-child strong:first-child {
     font-family: "Avenir Next", "Seravek", "Helvetica Neue", "Segoe UI", sans-serif;
-    font-size: 0.8rem;
+    font-size: 1.3rem;              /* 13px */
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
@@ -84,7 +89,7 @@ pre code.language-text, pre code.language-console {
 /* Tables: lighter, book-like rules. */
 .content main table {
     margin: 1.6em auto;
-    font-size: 0.95rem;
+    font-size: 1.55rem;             /* 15.5px */
 }
 
 /* Slightly tighter inline code so it sits well in serif prose. */
